@@ -1,0 +1,16 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Basic MVI App"
+include ':app'
+include ':entity'
+include ':useCase'
+include ':repository'
+include ':viewModel'
+include ':remote'
+include ':ui'
+include ':db'

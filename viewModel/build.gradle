@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk CompileSdkVersion
+
+    defaultConfig {
+        minSdk MinSdkVersion
+        targetSdk TargetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'TMDB_API_BASE_IMG_URL', '"' + project.properties['tmdb_api_base_img_url'] + '"'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    api project(path: ':useCase')
+
+    //region basic tools
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinReflectVersion"
+    //endregion basic tools
+
+    //region lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleViewmodelKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleLivedataKtxVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleViewmodelSavedstateVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleCommonJava8Version"
+    //endregion lifecycle
+
+    //region hilt
+    implementation "com.google.dagger:hilt-android:$hiltAndroidVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltCompilerVersion"
+    //endregion hilt
+
+    //region tests
+    testImplementation(testFixtures(project(path: ':entity')))
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTestVersion"
+    testImplementation "android.arch.core:core-testing:$coreTestingVersion"
+    //endregion tests
+
+    //region android tests
+    androidTestImplementation "androidx.test.ext:junit:$androidJunitVersion"
+    //endregion android tests
+}

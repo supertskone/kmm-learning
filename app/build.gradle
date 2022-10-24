@@ -1,0 +1,96 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk CompileSdkVersion
+
+    defaultConfig {
+        applicationId "com.khoshnaw.basicmvi"
+        minSdkVersion MinSdkVersion
+        targetSdkVersion TargetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildTypes.each {
+        it.buildConfigField 'String', 'TMDB_API_BASE_URL', '"' + project.properties['tmdb_api_base_url'] + '"'
+        it.buildConfigField "String", "TMDB_API_KEY", '"' + project.properties["tmdb_api_key"] + '"'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    //region setup
+    api project(path: ':ui')
+    api project(path: ':db')
+    api project(path: ':remote')
+    //endregion setup
+
+    //region basic tools
+    implementation "com.android.support:multidex:$multidexVersion"
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+    //endregion basic tools
+
+    //region hilt
+    implementation "com.google.dagger:hilt-android:$hiltAndroidVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltCompilerVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltAndroidCompilerVersion"
+    kapt "androidx.hilt:hilt-compiler:$androidxHiltCompilerVersion"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltLifecycleViewmodelVersion"
+    //endregion hilt
+
+    //region okhttp
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptorVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    //endregion okhttp
+
+    //region room
+    implementation "androidx.room:room-runtime:$roomRuntimeVersion"
+    kapt "androidx.room:room-compiler:$roomCompilerVersion1"
+    implementation "androidx.room:room-ktx:$roomKtxVersion"
+    testImplementation "androidx.room:room-testing:$roomTestingVersion"
+    //endregion room
+
+    //region moshi
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshiKotlinVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$converterMoshiVersion"
+    //endregion moshi
+
+    //region tests
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
+    //endregion tests
+
+    //region android Test
+    androidTestImplementation "androidx.test.ext:junit:$androidJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoCoreVersion"
+    //endregion android Test
+}

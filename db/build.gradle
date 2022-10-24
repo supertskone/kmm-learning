@@ -1,0 +1,60 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdk CompileSdkVersion
+
+    defaultConfig {
+        minSdk MinSdkVersion
+        targetSdk TargetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    api project(path: ':repository')
+
+    //region basic tools
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    //endregion basic tools
+
+    //region room
+    implementation "androidx.room:room-runtime:$roomRuntimeVersion"
+    kapt "androidx.room:room-compiler:$roomCompilerVersion1"
+    implementation "androidx.room:room-ktx:$roomKtxVersion"
+    testImplementation "androidx.room:room-testing:$roomTestingVersion"
+    //endregion room
+
+    //region tests
+    testImplementation(testFixtures(project(path: ':entity')))
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "io.mockk:mockk:$mockkVersion"
+    testImplementation "com.google.truth:truth:$truthVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxCoroutinesTestVersion"
+    //endregion tests
+
+    //region android tests
+    androidTestImplementation "androidx.test.ext:junit:$androidJunitVersion"
+    //endregion android tests
+}
